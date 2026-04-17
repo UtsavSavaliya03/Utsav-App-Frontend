@@ -1,14 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter, useRoutes } from "react-router-dom";
+import { AccessibilityProvider } from "./context/AccessibilityContext.jsx";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const AppRoutes = () => {
+  return useRoutes(App);
+};
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <AccessibilityProvider>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  </AccessibilityProvider>,
 );
 
 // If you want to start measuring performance in your app, pass a function
