@@ -1,46 +1,93 @@
-import React, { useState } from "react";
-import { Checkbox, Form, Input, Tag } from "antd";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Alert, Checkbox, Form, Input, Tag } from "antd";
 import LoadableButton from "../../components/buttons/LoadableButton.jsx";
-import {
-  ExclamationCircleOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-} from "@ant-design/icons";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import AccessibilityPanel from "../../components/accessibilityPanel/AccessibilityPanel.jsx";
+import { analyseUserApi } from "./loginAPI.js";
 
 export default function Login() {
-  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [initialValues, setInitialValues] = useState({
     email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [keystrokes, setKeystrokes] = useState(0);
+  const [backspaces, setBackspaces] = useState(0);
+  const [startTime, setStartTime] = useState(Date.now());
   const [isHighSupport, setIsHighSupport] = useState(false);
+  const [counter, setCounter] = useState(0);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Backspace") {
+      setBackspaces((prev) => prev + 1);
+    } else {
+      setKeystrokes((prev) => prev + 1);
+    }
+  };
 
   const handleSubmit = async (values) => {
     try {
       setIsLoading(true);
-      if (true) {
+      setTimeout(() => {
         form.resetFields();
-      }
-      setIsLoading(false);
+        setIsLoading(false);
+      }, 2000);
     } catch (error) {
       setIsLoading(false);
     }
   };
 
+  const analyseUser = async () => {
+    if (isHighSupport || backspaces < 10 || keystrokes < 20) {
+      return;
+    }
+
+    const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+
+    try {
+      const params = { keystrokes, backspaces, time: timeTaken };
+      const data = await analyseUserApi(params);
+
+      if (data?.status) {
+        // Trigger support mode
+        if (data?.data?.score > 0.6) {
+          setIsHighSupport(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error wwhile analyzing user:", error);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCounter((current) => current + 1);
+    }, 30000);
+
+    return () => clearInterval(interval); // cleanup
+  }, []);
+
+  useEffect(() => {
+    analyseUser();
+  }, [counter]);
+
   return (
     <div className="min-h-dvh md:flex items-center justify-center">
       <div className="md:w-2/6 bg-white shadow-lg p-9 rounded-xl">
+        <Alert
+          title="Welcome!"
+          description="This is a demo environment created for research purposes. No real accounts are required — just enter any details to continue."
+          type="warning"
+          showIcon
+        />
         <Form
           autoComplete="off"
           form={form}
           initialValues={initialValues}
           onFinish={handleSubmit}
         >
-          <p className="font-bold sm:text-5xl text-2xl text-secondary mb-5">
+          <p className="font-bold sm:text-4xl text-2xl text-secondary my-5">
             Login
           </p>
           <p className="mb-8 text-lg">Login to access your account.</p>
@@ -58,6 +105,7 @@ export default function Login() {
               placeholder="Email"
               size="large"
               autoComplete={isHighSupport ? "on" : "off"}
+              onKeyDown={handleKeyDown}
             />
           </Form.Item>
           {isHighSupport && (
@@ -76,6 +124,7 @@ export default function Login() {
               placeholder="Password"
               size="large"
               visibilityToggle={isHighSupport}
+              onKeyDown={handleKeyDown}
             />
           </Form.Item>
           {isHighSupport && (
