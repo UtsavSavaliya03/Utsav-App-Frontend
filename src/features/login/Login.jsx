@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, Checkbox, Form, Input, Tag } from "antd";
 import LoadableButton from "../../components/buttons/LoadableButton.jsx";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import AccessibilityPanel from "../../components/accessibilityPanel/AccessibilityPanel.jsx";
-import { analyseUserApi } from "./loginAPI.js";
+import { analyseUserApi, sessionApi } from "./loginAPI.js";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState({
     email: "",
     password: "",
@@ -16,7 +18,20 @@ export default function Login() {
   const [backspaces, setBackspaces] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
   const [isHighSupport, setIsHighSupport] = useState(false);
+  const [score, setScore] = useState(0);
+  const [switchTime, setSwitchTime] = useState(0);
   const [counter, setCounter] = useState(0);
+  const typingTimeoutRef = useRef(null);
+
+  const handleTyping = () => {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      analyseUser();
+    }, 5000); // 5 sec pause
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === "Backspace") {
@@ -29,20 +44,35 @@ export default function Login() {
   const handleSubmit = async (values) => {
     try {
       setIsLoading(true);
-      setTimeout(() => {
+
+      const params = {
+        task: "login",
+        keystrokes,
+        backspaces,
+        timeTaken: Math.floor((Date.now() - startTime) / 1000),
+        score: score,
+        supportTriggered: isHighSupport,
+        switchTime: switchTime,
+        completed: true,
+      };
+      const data = await sessionApi(params);
+      if (data?.status) {
         form.resetFields();
         setIsLoading(false);
-      }, 2000);
+        navigate("/feedback");
+      }
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
     }
   };
 
   const analyseUser = async () => {
-    if (isHighSupport || backspaces < 10 || keystrokes < 20) {
+    if (isLoading || isHighSupport || backspaces < 10 || keystrokes < 20) {
       return;
     }
 
+    setIsLoading(true);
     const timeTaken = Math.floor((Date.now() - startTime) / 1000);
 
     try {
@@ -53,10 +83,15 @@ export default function Login() {
         // Trigger support mode
         if (data?.data?.score > 0.6) {
           setIsHighSupport(true);
+          setScore(data?.data?.score);
+          setSwitchTime(timeTaken);
         }
+        setIsLoading(false);
       }
+      setIsLoading(false);
     } catch (error) {
       console.error("Error wwhile analyzing user:", error);
+      setIsLoading(false);
     }
   };
 
@@ -106,6 +141,7 @@ export default function Login() {
               size="large"
               autoComplete={isHighSupport ? "on" : "off"}
               onKeyDown={handleKeyDown}
+              onChange={handleTyping}
             />
           </Form.Item>
           {isHighSupport && (
@@ -125,6 +161,7 @@ export default function Login() {
               size="large"
               visibilityToggle={isHighSupport}
               onKeyDown={handleKeyDown}
+              onChange={handleTyping}
             />
           </Form.Item>
           {isHighSupport && (
