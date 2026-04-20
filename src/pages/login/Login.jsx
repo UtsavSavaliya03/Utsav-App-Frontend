@@ -14,6 +14,7 @@ export default function Login() {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
   const [keystrokes, setKeystrokes] = useState(0);
   const [backspaces, setBackspaces] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
@@ -43,7 +44,7 @@ export default function Login() {
 
   const handleSubmit = async (values) => {
     try {
-      setIsLoading(true);
+      setIsLoadingSubmit(true);
 
       const params = {
         task: "login",
@@ -58,17 +59,23 @@ export default function Login() {
       const data = await sessionApi(params);
       if (data?.status) {
         form.resetFields();
-        setIsLoading(false);
+        setIsLoadingSubmit(false);
         navigate("/feedback");
       }
-      setIsLoading(false);
+      setIsLoadingSubmit(false);
     } catch (error) {
-      setIsLoading(false);
+      setIsLoadingSubmit(false);
     }
   };
 
   const analyseUser = async () => {
-    if (isLoading || isHighSupport || backspaces < 10 || keystrokes < 20) {
+    if (
+      isLoading ||
+      isLoadingSubmit ||
+      isHighSupport ||
+      backspaces < 10 ||
+      keystrokes < 20
+    ) {
       return;
     }
 
@@ -76,7 +83,7 @@ export default function Login() {
     const timeTaken = Math.floor((Date.now() - startTime) / 1000);
 
     try {
-      const params = { keystrokes, backspaces, time: timeTaken };
+      const params = { fieldCount: 2, keystrokes, backspaces, time: timeTaken };
       const data = await analyseUserApi(params);
 
       if (data?.status) {
@@ -182,7 +189,7 @@ export default function Login() {
             type="submit"
             lable="Login"
             loadingLable="Logging in..."
-            isLoading={isLoading}
+            isLoading={isLoadingSubmit}
           />
         </Form>
       </div>

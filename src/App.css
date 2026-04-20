@@ -2,3 +2,10 @@ html, body, #root {
   height: 100%;
   background-color: #eff6ff; /* Tailwind blue-50 */
 }
+
+/* Hide arrows from number input fields */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
