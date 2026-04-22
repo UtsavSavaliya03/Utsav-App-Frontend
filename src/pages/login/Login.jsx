@@ -5,9 +5,11 @@ import { ExclamationCircleOutlined } from "@ant-design/icons";
 import AccessibilityPanel from "../../components/accessibilityPanel/AccessibilityPanel.jsx";
 import { analyseUserApi, sessionApi } from "./loginAPI.js";
 import { useNavigate } from "react-router-dom";
+import useClickTracker from "../../hooks/useClickTracker.jsx";
 
 export default function Login() {
   const [form] = Form.useForm();
+  const clickCount = useClickTracker();
   const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState({
     email: "",
@@ -50,6 +52,7 @@ export default function Login() {
         task: "login",
         keystrokes,
         backspaces,
+        clickCount,
         timeTaken: Math.floor((Date.now() - startTime) / 1000),
         score: score,
         supportTriggered: isHighSupport,
@@ -83,7 +86,13 @@ export default function Login() {
     const timeTaken = Math.floor((Date.now() - startTime) / 1000);
 
     try {
-      const params = { fieldCount: 2, keystrokes, backspaces, time: timeTaken };
+      const params = {
+        fieldCount: 2,
+        keystrokes,
+        backspaces,
+        clickCount,
+        time: timeTaken,
+      };
       const data = await analyseUserApi(params);
 
       if (data?.status) {

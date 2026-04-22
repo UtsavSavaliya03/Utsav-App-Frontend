@@ -5,8 +5,10 @@ import { ExclamationCircleOutlined, InfoCircleFilled } from "@ant-design/icons";
 import AccessibilityPanel from "../../components/accessibilityPanel/AccessibilityPanel.jsx";
 import { analyseUserApi, sessionApi } from "./registerAPI.js";
 import { useNavigate } from "react-router-dom";
+import useClickTracker from "../../hooks/useClickTracker.jsx";
 
 export default function Register() {
+  const clickCount = useClickTracker();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState({
@@ -54,6 +56,7 @@ export default function Register() {
         task: "signup",
         keystrokes,
         backspaces,
+        clickCount,
         timeTaken: Math.floor((Date.now() - startTime) / 1000),
         score: score,
         supportTriggered: isHighSupport,
@@ -87,7 +90,13 @@ export default function Register() {
     const timeTaken = Math.floor((Date.now() - startTime) / 1000);
 
     try {
-      const params = { fieldCount: 6, keystrokes, backspaces, time: timeTaken };
+      const params = {
+        fieldCount: 6,
+        keystrokes,
+        backspaces,
+        clickCount,
+        time: timeTaken,
+      };
       const data = await analyseUserApi(params);
       if (data?.status) {
         // Trigger support mode
@@ -104,6 +113,18 @@ export default function Register() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCounter((current) => current + 1);
+    }, 30000);
+
+    return () => clearInterval(interval); // cleanup
+  }, []);
+
+  useEffect(() => {
+    analyseUser();
+  }, [counter]);
 
   return (
     <div className="min-h-dvh md:flex items-center justify-center py-9">
