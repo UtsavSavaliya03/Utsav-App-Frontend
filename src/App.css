@@ -1,6 +1,7 @@
 html, body, #root {
   height: 100%;
   background-color: #eff6ff; /* Tailwind blue-50 */
+  overflow-x: hidden;
 }
 
 /* Hide arrows from number input fields */
