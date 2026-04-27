@@ -4,6 +4,8 @@ import AccessibilityPanel from "../../components/accessibilityPanel/Accessibilit
 import { analyseUserApi, sessionApi } from "./plansAPI.js";
 import { useNavigate } from "react-router-dom";
 import LoadableButton from "../../components/buttons/LoadableButton.jsx";
+import SpeakButton from "../../utils/SpeechHelper.jsx";
+import { useAccessibility } from "../../context/AccessibilityContext.jsx";
 
 const { Title, Text } = Typography;
 
@@ -101,6 +103,7 @@ export default function DecisionInterfacePage() {
   const [isHighSupport, setIsHighSupport] = useState(false);
   const [score, setScore] = useState(0);
   const [switchTime, setSwitchTime] = useState(0);
+  const { settings } = useAccessibility();
 
   // Tracking Metrics
   const [optionChanges, setOptionChanges] = useState(0);
@@ -269,13 +272,23 @@ export default function DecisionInterfacePage() {
 
         {isHighSupport && (
           <div className="mb-6 bg-blue-50 border border-blue-200 rounded-2xl p-4">
-            <p className="font-semibold text-gray-800 mb-1">
-              Recommended Choice: Standard Plan ⭐
-            </p>
-            <p className="text-sm text-gray-600">
-              Best for most users with balanced pricing, strong features, and
-              priority support.
-            </p>
+            <div className="flex items-center gap-3 mb-2">
+              <p className="font-semibold text-gray-800">
+                Recommended Choice: Standard Plan ⭐
+              </p>
+              {settings?.auditorySupport && (
+                <SpeakButton text="Recommended Choice: Standard Plan" />
+              )}
+            </div>
+            <div className="flex items-center gap-3">
+              <p className="text-sm text-gray-600">
+                Best for most users with balanced pricing, strong features, and
+                priority support.
+              </p>
+              {settings?.auditorySupport && (
+                <SpeakButton text=" Best for most users with balanced pricing, strong features, and priority support." />
+              )}
+            </div>
           </div>
         )}
 
@@ -324,7 +337,12 @@ export default function DecisionInterfacePage() {
                   {/* High Support UI = extra details + stronger guidance */}
                   {isHighSupport && (
                     <div className="bg-gray-50 p-3 my-3 rounded-xl text-sm text-gray-700 space-y-2">
+                      <div className="flex gap-3">
                       <p className="font-medium">More Details</p>
+                      {settings?.auditorySupport && (
+                        <SpeakButton text={plan.details} />
+                      )}
+                      </div>
                       {plan.details.map((item, idx) => (
                         <p key={idx}>• {item}</p>
                       ))}

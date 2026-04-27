@@ -6,6 +6,8 @@ import AccessibilityPanel from "../../components/accessibilityPanel/Accessibilit
 import { analyseUserApi, sessionApi } from "./loginAPI.js";
 import { useNavigate } from "react-router-dom";
 import useClickTracker from "../../hooks/useClickTracker.jsx";
+import SpeakButton from "../../utils/SpeechHelper.jsx";
+import { useAccessibility } from "../../context/AccessibilityContext.jsx";
 
 export default function Login() {
   const [form] = Form.useForm();
@@ -25,6 +27,7 @@ export default function Login() {
   const [switchTime, setSwitchTime] = useState(0);
   const [counter, setCounter] = useState(0);
   const typingTimeoutRef = useRef(null);
+  const { settings } = useAccessibility();
 
   const handleTyping = () => {
     if (typingTimeoutRef.current) {
@@ -141,7 +144,12 @@ export default function Login() {
           <p className="font-bold sm:text-4xl text-2xl text-secondary my-5">
             Login
           </p>
-          <p className="mb-8 text-lg">Login to access your account.</p>
+          <div className="mb-8 flex items-center gap-3">
+            <p className="text-lg">Login to access your account.</p>
+            {settings?.auditorySupport && (
+              <SpeakButton text="Login to access your account." />
+            )}
+          </div>
 
           <Form.Item
             name="email"
@@ -163,7 +171,14 @@ export default function Login() {
           {isHighSupport && (
             <div className="mt-2 border border-orange-300 rounded-md bg-orange-100 text-orange-600 flex gap-2 px-2 pb-[2px] items-start">
               <ExclamationCircleOutlined className="pt-1" />
-              <p>Check that your email follows the format example@domain.com</p>
+              <div className="flex items-center justify-center">
+                <p>
+                  Check that your email follows the format example@domain.com
+                </p>
+                {settings?.auditorySupport && (
+                  <SpeakButton text="Check that your email follows the format example@domain.com" />
+                )}
+              </div>
             </div>
           )}
           <Form.Item
@@ -183,9 +198,14 @@ export default function Login() {
           {isHighSupport && (
             <div className="mt-2 border border-orange-300 rounded-md bg-orange-100 text-orange-600 flex gap-2 px-2 pb-[2px] items-start">
               <ExclamationCircleOutlined className="pt-1" />
-              <p>
-                Use at least 8 characters with letters, numbers, and symbols.
-              </p>
+              <div className="flex items-center justify-center">
+                <p>
+                  Use at least 8 characters with letters, numbers, and symbols.
+                </p>
+                {settings?.auditorySupport && (
+                  <SpeakButton text="Use at least 8 characters with letters, numbers, and symbols." />
+                )}
+              </div>
             </div>
           )}
           <div className="flex justify-between items-center mt-5">

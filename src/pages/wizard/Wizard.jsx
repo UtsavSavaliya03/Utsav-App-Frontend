@@ -20,6 +20,8 @@ import { analyseUserApi, sessionApi } from "./wizardAPI.js";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import useClickTracker from "../../hooks/useClickTracker.jsx";
+import SpeakButton from "../../utils/SpeechHelper.jsx";
+import { useAccessibility } from "../../context/AccessibilityContext.jsx";
 
 const { Step } = Steps;
 const { RangePicker } = DatePicker;
@@ -48,6 +50,7 @@ export default function Wizard() {
   const [switchTime, setSwitchTime] = useState(0);
   const [counter, setCounter] = useState(0);
   const typingTimeoutRef = useRef(null);
+  const { settings } = useAccessibility();
   const next = () => setCurrent(current + 1);
   const prev = () => setCurrent(current - 1);
 
@@ -172,8 +175,18 @@ export default function Wizard() {
           showIcon
         />
 
-        <h2 className="text-2xl font-bold mb-2 mt-4">Grand London Stay</h2>
-        <p className="mb-6 text-gray-500">221B Baker Street, London, UK</p>
+        <div className="mb-2 mt-4 flex items-center gap-3">
+          <h2 className="text-2xl font-bold">Grand London Stay</h2>
+          {settings?.auditorySupport && (
+            <SpeakButton text="Grand London Stay" />
+          )}
+        </div>
+        <div className="mb-6 flex items-center gap-3">
+          <p className="text-gray-500">221B Baker Street, London, UK.</p>
+          {settings?.auditorySupport && (
+            <SpeakButton text="221B Baker Street, London, UK" />
+          )}
+        </div>
 
         <Steps
           current={current}
@@ -677,9 +690,15 @@ export default function Wizard() {
                 </Form.Item>
               </div>
               <div className="col-span-2">
-                <p className="text-lg">
-                  Review your booking details before confirming.
-                </p>
+                <p className="text-lg"></p>
+                <div className="mb-2 flex items-center gap-3">
+                  <p className="text-lg">
+                    Review your booking details before confirming.
+                  </p>
+                  {settings?.auditorySupport && (
+                    <SpeakButton text="Review your booking details before confirming." />
+                  )}
+                </div>
 
                 <Form.Item
                   name="terms"

@@ -6,7 +6,7 @@ export const AccessibilityProvider = ({ children }) => {
   const [settings, setSettings] = useState({
     fontSize: 18,
     zoom: 1,
-    textToSpeech: false,
+    auditorySupport: false,
   });
 
   return (

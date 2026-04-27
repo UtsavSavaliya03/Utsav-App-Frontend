@@ -4,6 +4,8 @@ import { analyseUserApi, sessionApi } from "./chatFormAPI.js";
 import { useNavigate } from "react-router-dom";
 import useClickTracker from "../../hooks/useClickTracker.jsx";
 import AccessibilityPanel from "../../components/accessibilityPanel/AccessibilityPanel.jsx";
+import SpeakButton from "../../utils/SpeechHelper.jsx";
+import { useAccessibility } from "../../context/AccessibilityContext.jsx";
 
 const questions = [
   { key: "name", question: "What is your full name?", level: "medium" },
@@ -107,6 +109,7 @@ const ChatForm = () => {
   const [switchTime, setSwitchTime] = useState(0);
   const [counter, setCounter] = useState(0);
   const typingTimeoutRef = useRef(null);
+  const { settings } = useAccessibility();
 
   const handleTyping = () => {
     if (typingTimeoutRef.current) {
@@ -292,8 +295,12 @@ const ChatForm = () => {
                     : "bg-gray-100 text-gray-800  rounded-bl-none"
                 }`}
                 >
-                  {msg.text}
-
+                  <div className="flex gap-3">
+                    {msg.text}
+                    {settings?.auditorySupport && (
+                      <SpeakButton text={msg.text} />
+                    )}
+                  </div>
                   {/* 🔥 HIGH SUPPORT HINT */}
                   {msg.sender === "bot" && isHighSupport && currentKey && (
                     <div>

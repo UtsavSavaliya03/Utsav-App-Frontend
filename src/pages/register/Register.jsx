@@ -6,6 +6,8 @@ import AccessibilityPanel from "../../components/accessibilityPanel/Accessibilit
 import { analyseUserApi, sessionApi } from "./registerAPI.js";
 import { useNavigate } from "react-router-dom";
 import useClickTracker from "../../hooks/useClickTracker.jsx";
+import SpeakButton from "../../utils/SpeechHelper.jsx";
+import { useAccessibility } from "../../context/AccessibilityContext.jsx";
 
 export default function Register() {
   const clickCount = useClickTracker();
@@ -29,6 +31,7 @@ export default function Register() {
   const [switchTime, setSwitchTime] = useState(0);
   const [counter, setCounter] = useState(0);
   const typingTimeoutRef = useRef(null);
+  const { settings } = useAccessibility();
 
   const handleTyping = () => {
     if (typingTimeoutRef.current) {
@@ -144,9 +147,14 @@ export default function Register() {
           <p className="font-bold sm:text-4xl text-2xl text-secondary my-5">
             Sign Up
           </p>
-          <p className="mb-3 text-lg">
-            Create your account and start your journey.
-          </p>
+          <div className="mb-3 flex items-center gap-3">
+            <p className="text-lg">
+              Create your account and start your journey.
+            </p>
+            {settings?.auditorySupport && (
+              <SpeakButton text="  Create your account and start your journey." />
+            )}
+          </div>
           <div className="gap-4 md:grid grid-cols-2 mt-5 space-y-3 md:space-y-0">
             <div>
               <p className="font-semibold text-gray-600 mb-1">First Name</p>

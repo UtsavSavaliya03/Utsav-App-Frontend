@@ -71,15 +71,15 @@ export default function AccessibilityPanel() {
               </div>
             </div>
 
-            {/* Text to speech */}
+            {/* Auditory Cognitive Support System */}
             <div className="mb-4">
-              <p>Text to Speech</p>
+              <p>Auditory Cognitive Support</p>
               <Switch
                 checkedChildren="On"
                 unCheckedChildren="Off"
-                checked={settings?.textToSpeech}
+                checked={settings?.auditorySupport}
                 onChange={(checked) =>
-                  setSettings({ ...settings, textToSpeech: checked })
+                  setSettings({ ...settings, auditorySupport: checked })
                 }
               />
             </div>
@@ -89,7 +89,7 @@ export default function AccessibilityPanel() {
               danger
               type="primary"
               onClick={() =>
-                setSettings({ fontSize: 18, zoom: 1, textToSpeech: false })
+                setSettings({ fontSize: 18, zoom: 1, auditorySupport: false })
               }
             >
               Reset
