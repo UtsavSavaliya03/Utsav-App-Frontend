@@ -245,8 +245,8 @@ export default function DecisionInterfacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 md:p-10 ">
-      <div>
+    <div className="min-h-screen md:flex bg-gray-50 p-6 md:p-10 gap-6">
+      <div className="w-full">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <Title level={2} className="!mb-1">
@@ -323,7 +323,7 @@ export default function DecisionInterfacePage() {
 
                   {/* High Support UI = extra details + stronger guidance */}
                   {isHighSupport && (
-                    <div className="bg-gray-50 p-3 rounded-xl text-sm text-gray-700 space-y-2">
+                    <div className="bg-gray-50 p-3 my-3 rounded-xl text-sm text-gray-700 space-y-2">
                       <p className="font-medium">More Details</p>
                       {plan.details.map((item, idx) => (
                         <p key={idx}>• {item}</p>
@@ -342,8 +342,8 @@ export default function DecisionInterfacePage() {
           })}
         </div>
       </div>
-      {isHighSupport && <AccessibilityPanel />}
       {contextHolder}
+      {isHighSupport && <AccessibilityPanel />}
     </div>
   );
 }

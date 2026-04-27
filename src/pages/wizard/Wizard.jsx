@@ -163,7 +163,7 @@ export default function Wizard() {
   ];
 
   return (
-    <div className="min-h-dvh md:flex items-center justify-center py-9">
+    <div className="min-h-dvh md:flex items-center justify-center p-4">
       <div className="md:w-2/3 bg-white shadow-lg p-9 rounded-xl">
         <Alert
           title="Welcome!"
@@ -446,6 +446,7 @@ export default function Wizard() {
                 </div>{" "}
                 <Form.Item
                   name="email"
+                  className="mb-0"
                   rules={[
                     { required: true, message: "Please enter your email." },
                     { type: "email", message: "Please enter valid email." },
@@ -508,7 +509,7 @@ export default function Wizard() {
           )}
 
           {current === 3 && (
-            <div className="gap-4 grid md:grid-cols-2">
+            <div className="gap-4 md:grid md:grid-cols-2 space-y-4 md:space-y-0">
               <div className="col-span-2">
                 <p className="font-semibold text-gray-600 mb-1">
                   Payment Method
@@ -713,9 +714,9 @@ export default function Wizard() {
 
             {current === steps.length - 1 && (
               <LoadableButton
-                className="mt-4 px-9 pb-1"
+                className="px-9 pb-1"
                 type="submit"
-                lable="Pay & Confirm"
+                lable="Confirm"
                 loadingLable="Confirming your booking..."
                 isLoading={isLoadingSubmit}
               />

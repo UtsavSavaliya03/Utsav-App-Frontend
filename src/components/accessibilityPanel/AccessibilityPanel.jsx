@@ -17,7 +17,7 @@ export default function AccessibilityPanel() {
   return (
     <div>
       <div>
-        <div className="fixed right-0 top-50 -translate-y-2/3 z-50 flex overflow-hidden">
+        <div className="fixed right-0 top-9 z-50 flex overflow-hidden">
           {/* 👉 PANEL */}
           <div className={`w-72 bg-white shadow-md rounded-l-2xl p-4 transform transition-transform duration-300 ease-in-out ${open ? "translate-x-1" : "translate-x-[120%]"}`}>
             <h2 className="text-lg font-bold mb-4">Accessibility settings</h2>

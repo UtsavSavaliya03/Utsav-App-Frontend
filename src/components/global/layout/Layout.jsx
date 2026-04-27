@@ -1,8 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAccessibility } from "../../../context/AccessibilityContext.jsx";
 
 export default function Layout({ children }) {
   const { settings } = useAccessibility();
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setShow(true), 50);
+  }, []);
 
   useEffect(() => {
     document.body.style.fontSize = `${settings.fontSize}px`;
@@ -14,7 +19,11 @@ export default function Layout({ children }) {
   }, [settings]);
 
   return (
-    <div className="min-h-screen bg-blue-50">
+    <div
+      className={`min-h-screen bg-blue-50 transition-all duration-500 ease-out ${
+        show ? "opacity-100" : "opacity-0"
+      }`}
+    >
       <div className="m-auto">{children}</div>
     </div>
   );

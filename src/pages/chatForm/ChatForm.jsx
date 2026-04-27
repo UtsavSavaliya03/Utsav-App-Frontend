@@ -246,8 +246,8 @@ const ChatForm = () => {
   }, [counter]);
 
   return (
-    <div className="min-h-dvh md:flex items-center justify-center">
-      <div className="md:w-2/6 bg-white shadow-xl rounded-2xl flex flex-col h-[620px] border">
+    <div className="min-h-dvh flex items-center justify-center p-4">
+      <div className="md:w-4/6 lg:w-2/6 bg-white shadow-xl rounded-2xl flex flex-col h-[620px] border">
         <Alert
           className="m-4"
           title="Welcome!"

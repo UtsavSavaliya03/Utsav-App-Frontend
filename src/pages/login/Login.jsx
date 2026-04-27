@@ -124,8 +124,8 @@ export default function Login() {
   }, [counter]);
 
   return (
-    <div className="min-h-dvh md:flex items-center justify-center">
-      <div className="md:w-2/6 bg-white shadow-lg p-9 rounded-xl">
+    <div className="min-h-dvh md:flex items-center justify-center lg:p-0 p-4">
+      <div className="md:w-4/6 lg:w-2/6 bg-white shadow-lg p-9 rounded-xl">
         <Alert
           title="Welcome!"
           description="This is a demo environment created for research purposes. No real accounts are required — just enter any details to continue."

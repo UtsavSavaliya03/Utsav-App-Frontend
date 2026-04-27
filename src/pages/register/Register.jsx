@@ -127,8 +127,8 @@ export default function Register() {
   }, [counter]);
 
   return (
-    <div className="min-h-dvh md:flex items-center justify-center py-9">
-      <div className="md:w-1/2 bg-white shadow-lg p-9 rounded-xl">
+    <div className="min-h-dvh flex items-center justify-center p-4 md:p-9">
+      <div className="lg:w-1/2 bg-white shadow-lg p-9 rounded-xl">
         <Alert
           title="Welcome!"
           description="This is a demo environment created for research purposes. No real accounts are required — just enter any details to continue."
@@ -147,8 +147,8 @@ export default function Register() {
           <p className="mb-3 text-lg">
             Create your account and start your journey.
           </p>
-          <div className="gap-4 grid md:grid-cols-2">
-            <div className="mt-5">
+          <div className="gap-4 md:grid grid-cols-2 mt-5 space-y-3 md:space-y-0">
+            <div>
               <p className="font-semibold text-gray-600 mb-1">First Name</p>
               <Form.Item
                 name="fName"
@@ -172,7 +172,7 @@ export default function Register() {
                 />
               </Form.Item>
             </div>
-            <div className="mt-5">
+            <div>
               <p className="font-semibold text-gray-600 mb-1">Last Name</p>
               <Form.Item
                 name="lName"
